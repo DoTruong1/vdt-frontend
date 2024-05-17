@@ -1,33 +1,118 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
+import { getAllData } from '../helpers/api.helper'
+import { Table, Space, Tooltip, Form, Popconfirm } from 'antd'
+import UserInfoModal from './components/user_info/Model'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+function CustomRow(props) {
+  return (
+    <Tooltip title="Bấm để xem thông tin chi tiết">
+      <tr onClick={props.onClick} {...props} />
+    </Tooltip>
+  );
+}
 
+function App() {
+  // let userInfo = {}
+  const [form] = Form.useForm();
+  const API_URL = import.meta.env.APP_API_URL
+  const [openModal, setOpenModal] = useState(false);
+  const [userInfo, setUserInfo] = useState({})
+  const [modalConfirmLoading, setModalConfirmLoading] = useState(false);
+  const [users, setUsers] = useState([])
+  const [loading, setLoading] = useState(true)
+
+
+  const showModal = () => setOpenModal(true);
+
+  const deleteUser = (id) => {
+    console.log("delete " + id)
+  }
+
+  // const [ser]/
+  const columns = [
+    {
+      title: "Họ và tên",
+      dataIndex: 'name',
+      key: 'id',
+      render: (_, record) => (
+        <Tooltip placement="topLeft" title={"Bấm để xem thông tin chi tiết"}>
+          <a onClick={(e) => {
+            const user = users.find(row => row.id === record.id)
+
+            setUserInfo(user)
+          }}> {record.name}</a>
+        </Tooltip >
+      )
+
+    },
+    {
+      title: 'Học trường',
+      dataIndex: 'school',
+      key: 'id',
+    },
+    {
+      title: 'Giới tính',
+      dataIndex: 'gender',
+      key: 'id',
+    },
+    {
+      title: 'Thao tác',
+      key: 'id',
+      render: (_, record) => (
+        <Space size="middle">
+          {/* <a>Chỉnh sửa</a> */}
+          <Popconfirm title="Bạn có muốn xoá?"
+            onConfirm={() => deleteUser(record.id)}
+            okText="Có, tôi muốn xoá"
+            cancelText="Huỷ"
+          >
+            <a>Xoá</a>
+          </Popconfirm>
+
+        </Space >
+      ),
+    },
+  ];
+  const fetchUsers = async () => {
+    try {
+      const usersData = await getAllData(API_URL + "vdters2024");
+      setUsers(usersData);
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+  useEffect(() => {
+    fetchUsers()
+  }, [])
+
+  // mở modal sau khi update userinfo
+  useEffect(() => {
+    const convertObjectToArr = Object.values(userInfo)
+    const isUserInfoBlanlk = convertObjectToArr.length === 0
+    if (!isUserInfoBlanlk) {
+      form.setFieldsValue(userInfo)
+      showModal()
+    }
+  }, [userInfo])
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+
+      <UserInfoModal
+        setOpenModal={setOpenModal}
+        openModal={openModal}
+        userInfo={userInfo}
+        form={form}
+      />
+      <Table columns={columns}
+        dataSource={users}
+        rowKey={"id"}
+
+      />
     </>
   )
 }
