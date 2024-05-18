@@ -4,6 +4,7 @@ import viteLogo from '/vite.svg'
 import { getAllData } from '../helpers/api.helper'
 import { Table, Space, Tooltip, Form, Popconfirm } from 'antd'
 import UserInfoModal from './components/user_info/Model'
+import UserTable from './components/user_table/UserTable'
 import './App.css'
 
 function CustomRow(props) {
@@ -32,50 +33,7 @@ function App() {
   }
 
   // const [ser]/
-  const columns = [
-    {
-      title: "Họ và tên",
-      dataIndex: 'name',
-      key: 'id',
-      render: (_, record) => (
-        <Tooltip placement="topLeft" title={"Bấm để xem thông tin chi tiết"}>
-          <a onClick={(e) => {
-            const user = users.find(row => row.id === record.id)
 
-            setUserInfo(user)
-          }}> {record.name}</a>
-        </Tooltip >
-      )
-
-    },
-    {
-      title: 'Học trường',
-      dataIndex: 'school',
-      key: 'id',
-    },
-    {
-      title: 'Giới tính',
-      dataIndex: 'gender',
-      key: 'id',
-    },
-    {
-      title: 'Thao tác',
-      key: 'id',
-      render: (_, record) => (
-        <Space size="middle">
-          {/* <a>Chỉnh sửa</a> */}
-          <Popconfirm title="Bạn có muốn xoá?"
-            onConfirm={() => deleteUser(record.id)}
-            okText="Có, tôi muốn xoá"
-            cancelText="Huỷ"
-          >
-            <a>Xoá</a>
-          </Popconfirm>
-
-        </Space >
-      ),
-    },
-  ];
   const fetchUsers = async () => {
     try {
       const usersData = await getAllData(API_URL + "vdters2024");
@@ -108,11 +66,15 @@ function App() {
         userInfo={userInfo}
         form={form}
       />
-      <Table columns={columns}
-        dataSource={users}
-        rowKey={"id"}
-
+      <UserTable
+        setUserInfo={setUserInfo}
+        users={users}
+        deleteUser={deleteUser}
       />
+      {/* <Table columns={columns}
+        dataSource={users}
+
+      /> */}
     </>
   )
 }

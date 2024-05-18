@@ -30,19 +30,20 @@ function UserInfoModal(props) {
     <>
       <Modal
         title={<>
-          <p>Thông tin sinh viên
+          <p>Thông tin thí sinh <> </>
             <Tooltip title="Bấm để chỉnh sửa thông tin"
               style={{
                 cursor: "pointer"
               }}
             >
-              [{<EditOutlined
+              {<EditOutlined
                 style={{
+                  borderLeft: '2px',
                   color: "blue",
                   cursor: "pointer"
                 }}
                 onClick={(e) => { setisEditing(!isEditing) }}
-              />}]
+              />}
             </Tooltip>
           </p>
         </>}
@@ -54,7 +55,7 @@ function UserInfoModal(props) {
         <Form
           form={props.form}
           name="basic"
-          disabled={isEditing}
+          disabled={!isEditing}
           onFinish={setModalConfirmLoading}
           onFinishFailed={onFinishFailed}
         >
