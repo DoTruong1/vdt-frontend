@@ -56,15 +56,7 @@ function App() {
       duration: 1,
     });
   };
-  // const handleFormChange = () => {
-  //   const hasErrors = form.getFieldsError().some(({ errors }) => errors.length);
-  //   const fieldValidate = form.isFieldsValidating();
-  //   console.log(fieldValidate)
-  //   setModalMetadata({
-  //     ...modalMetada,
-  //     disableSubmit: hasErrors && fieldValidate
-  //   });
-  // }
+
 
   const curdFunction = {
     fetchUserInfo: async (userId) => {
@@ -183,6 +175,7 @@ function App() {
   return (
     <>
       {contextHolder}
+
       <UserInfoModal
         modalFunc={{ modalMetada, setModalMetadata }}
         modalMetada={modalMetada}

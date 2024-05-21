@@ -44,6 +44,7 @@ function UserTable(props) {
     },
   ];
   return (<>
+
     <Table columns={columns}
       dataSource={props.users}
       rowKey={"id"}
