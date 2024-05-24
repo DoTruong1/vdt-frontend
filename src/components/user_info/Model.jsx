@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Modal, Form, Input, Tooltip } from 'antd'
+import { Modal, Form, Input, Tooltip, Select, Space, DatePicker } from 'antd'
 import { EditOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
 function UserInfoModal(props) {
 
   const [modalConfirmLoading, setModalConfirmLoading] = useState(false);
@@ -41,9 +42,10 @@ function UserInfoModal(props) {
   return (
     <>
       <Modal
+        width={"600px"}
         title={<>
           <p>Thông tin thí sinh <> </>
-            <Tooltip title="Bấm để chỉnh sửa thông tin"
+            {!props.modalFunc.modalMetada.isAdd ? (<Tooltip title="Bấm để chỉnh sửa thông tin"
               style={{
                 cursor: "pointer"
               }}
@@ -56,7 +58,7 @@ function UserInfoModal(props) {
                 }}
                 onClick={(e) => { props.modalFunc.setModalMetadata({ ...props.modalFunc.modalMetada, isEditable: true }) }}
               />}
-            </Tooltip>
+            </Tooltip>) : (<></>)}
           </p>
         </>}
         open={props.modalFunc.modalMetada.isOpen}
@@ -67,6 +69,7 @@ function UserInfoModal(props) {
         okButtonProps={{ disabled: props.modalFunc.modalMetada.disableSubmit }}
       >
         <Form
+          variant='outlined'
           form={props.form}
           name="basic"
           disabled={!props.modalFunc.modalMetada.isEditable}
@@ -75,11 +78,9 @@ function UserInfoModal(props) {
         // onFieldsChange={props.handleFormChange}
 
         >
-          <Form.Item name="id">
-            <Input type="hidden" />
-          </Form.Item>
+
           <Form.Item
-            label="Họ và tên (*)"
+            label="Họ và tên"
             name="name"
             rules={[
               {
@@ -92,7 +93,7 @@ function UserInfoModal(props) {
             <Input />
           </Form.Item>
           <Form.Item
-            label="Trường (*):"
+            label="Trường"
             name="school"
             rules={[
               {
@@ -104,18 +105,92 @@ function UserInfoModal(props) {
           >
             <Input />
           </Form.Item>
+          <Space size={"middle"}>
+            <Form.Item
+              label="Giới tính (*):"
+              name="gender"
+              rules={[
+                {
+                  required: true,
+                  message: 'Vui lòng điền đủ thông tin!',
+                },
+              ]}
+              validateFirst
+            >
+              <Select
+
+                style={{ width: 80 }}
+                options={[
+                  { value: 'Nam', label: 'Nam' },
+                  { value: 'Nữ', label: 'Nữ' },
+                ]}
+              />
+            </Form.Item>
+            <Form.Item
+              label="Số điện thoại:"
+              name="phone"
+              rules={[
+                {
+                  required: true,
+                  // type: "regexp",
+                  pattern: new RegExp(/\d+/g),
+                  message: 'Vui lòng điền đúng định dạng!',
+                },
+              ]}
+              validateFirst
+            >
+              <Input />
+            </Form.Item>
+          </Space>
+          <Space size={"middle"}>
+            <Form.Item
+              label="Quốc tịch:"
+              name="nation"
+              rules={[
+                {
+                  required: true,
+                  message: 'Vui lòng điền đủ thông tin!',
+                },
+              ]}
+              validateFirst
+            >
+              <Input style={{ width: "120px" }}
+              />
+            </Form.Item>
+            <Form.Item
+              label="Email:"
+              name="email"
+              rules={[
+                {
+                  required: false,
+                  // message: 'Vui lòng điền đủ thông tin!',
+                },
+              ]}
+            // validateFirst
+            >
+              <Input style={{ width: "250px" }} />
+            </Form.Item>
+          </Space>
           <Form.Item
-            label="Giới tính (*):"
-            name="gender"
+            label="Sinh nhật:"
+            name="birthDay"
+            // getValueProps={(i) => dayjs(i.toString(), 'DD-MM-YYYY')}
+            // initialValue={dayjs()}
             rules={[
               {
                 required: true,
-                message: 'Vui lòng điền đủ thông tin!',
+                message: 'Vui lòng ngày sinh!',
               },
             ]}
-            validateFirst
           >
-            <Input />
+            <DatePicker
+              format={{
+                format: 'DD/MM/YYYY',
+                type: 'mask',
+              }} />
+          </Form.Item>
+          <Form.Item name="id">
+            <Input type="hidden" />
           </Form.Item>
         </Form>
       </Modal >

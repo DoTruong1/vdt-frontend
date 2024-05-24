@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import dayjs from "dayjs";
+import moment from "moment";
 import {
   getByIdApi,
   deleteAPI,
@@ -10,7 +10,6 @@ import {
 } from "../helpers/api.helper";
 import { Table, Space, Tooltip, Form, Popconfirm, notification } from "antd";
 import { UserAddOutlined } from "@ant-design/icons";
-
 import UserInfoModal from "./components/user_info/Model";
 import UserTable from "./components/user_table/UserTable";
 import { Typography } from "antd";
@@ -62,11 +61,16 @@ function App() {
     fetchUserInfo: async (userId) => {
       try {
         const respone = await getByIdApi(API_PATH, userId);
-        form.setFieldsValue(respone.data);
+        let date = moment(new Date(respone.data.birthDay), "DD/MM/YYYY")
+        let userInfo = { ...respone.data, birthDay: date }
+        // console.log(userInfo)
+        // user.birthDay = formatedBirthDay
+        // console.log(user.birthDay)
+        form.setFieldsValue(userInfo);
         setModalMetadata({
           isEditable: false,
           isAdd: false,
-          data: respone.data,
+          data: userInfo,
           isOpen: true,
           disableSubmit: true
         });
@@ -204,7 +208,11 @@ function App() {
                   form.setFieldsValue({
                     name: '',
                     school: '',
-                    gender: ''
+                    gender: '',
+                    email: '',
+                    birthDay: '',
+                    nation: '',
+                    phone: ''
                   });
                   setModalMetadata({
                     isEditable: true,
