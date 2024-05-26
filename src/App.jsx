@@ -61,7 +61,7 @@ function App() {
     fetchUserInfo: async (userId) => {
       try {
         const respone = await getByIdApi(API_PATH, userId);
-        let date = moment(new Date(respone.data.birthDay), "DD/MM/YYYY")
+        let date = moment(new Date(respone.data.birthDay ? respone.data.birthDay : "1975"), "YYYY")
         let userInfo = { ...respone.data, birthDay: date }
         // console.log(userInfo)
         // user.birthDay = formatedBirthDay

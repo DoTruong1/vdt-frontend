@@ -185,9 +185,9 @@ function UserInfoModal(props) {
           >
             <DatePicker
               format={{
-                format: 'DD/MM/YYYY',
+                format: 'YYYY',
                 type: 'mask',
-              }} />
+              }} picker='year' />
           </Form.Item>
           <Form.Item name="id">
             <Input type="hidden" />
