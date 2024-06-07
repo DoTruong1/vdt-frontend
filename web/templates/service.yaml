@@ -19,7 +19,7 @@ kind: Service
 metadata:
   name: fe-metrics
   labels:
-    metrics: true
+    type: metrics
     {{- include "web.labels" . | nindent 4 }}
 spec:
   type: ClusterIP
